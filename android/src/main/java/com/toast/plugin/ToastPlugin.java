@@ -1,6 +1,9 @@
 package com.toast.plugin;
 
+import android.content.DialogInterface;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.getcapacitor.JSObject;
 import com.getcapacitor.NativePlugin;
@@ -18,7 +21,18 @@ public class ToastPlugin extends Plugin {
         JSObject ret = new JSObject();
 
         try {
-            Toast.makeText(getActivity().getApplicationContext(), value != null ? value : "Toast plugin called", Toast.LENGTH_SHORT).show();
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Native Alert")
+                    .setMessage("Receive a call on Native Android.\nvalue: " + value)
+                    .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create()
+                    .show();
+
             ret.put("value", "Toast successful");
             call.success(ret);
         } catch (Exception ex) {
